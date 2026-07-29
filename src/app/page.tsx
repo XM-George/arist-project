@@ -27,6 +27,8 @@ export default function Home() {
         },
     ]);
 
+    const [isFormOpen, setIsFormOpen] = useState(false);
+
     function handleDelete(id: number) {
         setSponsors(
             sponsors.filter((sponsor) => sponsor.id !== id)
@@ -41,7 +43,13 @@ export default function Home() {
         <main>
             <h1>Sponsor Management</h1>
 
-            <SponsorForm onAdd={handleAdd} />
+            <button onClick={() => setIsFormOpen(!isFormOpen)}>
+                {isFormOpen ? "Ακύρωση" : "Νέος χορηγός"}
+            </button>
+
+            {isFormOpen && (
+                <SponsorForm onAdd={handleAdd} />
+            )}
 
             {sponsors.map((sponsor) => (
                 <SponsorCard
