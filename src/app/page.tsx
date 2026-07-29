@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import SponsorCard from "@/components/SponsorCard";
+import SponsorForm from "@/components/SponsorForm";
 import type { Sponsor } from "@/types/Sponsor";
 
 export default function Home() {
@@ -32,9 +33,15 @@ export default function Home() {
         );
     }
 
+    function handleAdd(newSponsor: Sponsor) {
+        setSponsors([...sponsors, newSponsor]);
+    }
+
     return (
         <main>
             <h1>Sponsor Management</h1>
+
+            <SponsorForm onAdd={handleAdd} />
 
             {sponsors.map((sponsor) => (
                 <SponsorCard
