@@ -37,6 +37,7 @@ export default function Home() {
 
     function handleAdd(newSponsor: Sponsor) {
         setSponsors([...sponsors, newSponsor]);
+        setIsFormOpen(false);
     }
 
     return (
