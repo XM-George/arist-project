@@ -34,6 +34,11 @@ export default function Home() {
             body: JSON.stringify(newSponsor),
         });
 
+        if (!response.ok) {
+            alert("Αποτυχία προσθήκης χορηγού");
+            return;
+        }
+
         const createdSponsor: Sponsor = await response.json();
 
         setSponsors([...sponsors, createdSponsor]);
@@ -43,8 +48,13 @@ export default function Home() {
     useEffect(() => {
         async function loadSponsors() {
             const response = await fetch("/api/sponsors");
-            const data: Sponsor[] = await response.json();
 
+            if (!response.ok) {
+                alert("Αποτυχία φόρτωσης χορηγών");
+                return;
+            }
+
+            const data: Sponsor[] = await response.json();
             setSponsors(data);
         }
 
