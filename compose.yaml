@@ -11,6 +11,37 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sponsors_user -d sponsors_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    environment:
+      DATABASE_URL: postgresql://sponsors_user:sponsors_password@database:5432/sponsors_db
+    depends_on:
+      database:
+        condition: service_healthy
+    command: npx prisma migrate deploy
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sponsor-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://sponsors_user:sponsors_password@database:5432/sponsors_db
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
 
 volumes:
   postgres_data:
