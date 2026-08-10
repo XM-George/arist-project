@@ -1,44 +1,55 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SponsorCard from "@/components/SponsorCard";
 import SponsorForm from "@/components/SponsorForm";
-import type { Sponsor } from "@/types/Sponsor";
+import type { NewSponsor, Sponsor } from "@/types/Sponsor";
+
 
 export default function Home() {
-    const [sponsors, setSponsors] = useState<Sponsor[]>([
-        {
-            id: 1,
-            name: "Acme Company",
-            email: "contact@acme.com",
-            tier: "GOLD",
-            amount: 5000,
-            contactPerson: "George Papadopoulos",
-            notes: "Κύριος χορηγός της εκδήλωσης",
-        },
-        {
-            id: 2,
-            name: "Tech Solutions",
-            email: "info@techsolutions.com",
-            tier: "SILVER",
-            amount: 2500,
-            contactPerson: "Maria Nikolaou",
-            notes: "Επικοινωνία ξανά τον επόμενο μήνα",
-        },
-    ]);
+    const [sponsors, setSponsors] = useState<Sponsor[]>([]);
 
     const [isFormOpen, setIsFormOpen] = useState(false);
 
-    function handleDelete(id: number) {
+    async function handleDelete(id: number) {
+        const response = await fetch(`/api/sponsors/${id}`, {
+            method: "DELETE",
+        });
+
+        if (!response.ok) {
+            return;
+        }
+
         setSponsors(
             sponsors.filter((sponsor) => sponsor.id !== id)
         );
     }
 
-    function handleAdd(newSponsor: Sponsor) {
-        setSponsors([...sponsors, newSponsor]);
+    async function handleAdd(newSponsor: NewSponsor) {
+        const response = await fetch("/api/sponsors", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newSponsor),
+        });
+
+        const createdSponsor: Sponsor = await response.json();
+
+        setSponsors([...sponsors, createdSponsor]);
         setIsFormOpen(false);
     }
+
+    useEffect(() => {
+        async function loadSponsors() {
+            const response = await fetch("/api/sponsors");
+            const data: Sponsor[] = await response.json();
+
+            setSponsors(data);
+        }
+
+        loadSponsors();
+    }, []);
 
     return (
         <main>
@@ -61,7 +72,4 @@ export default function Home() {
             ))}
         </main>
     );
-
-
-    //test for push
 }

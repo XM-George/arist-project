@@ -1,11 +1,11 @@
 "use client";
 
-import type { Sponsor } from "@/types/Sponsor";
+import type { NewSponsor, SponsorTier } from "@/types/Sponsor";
 
 import { useState } from "react";
 
 type SponsorFormProps = {
-    onAdd: (sponsor: Sponsor) => void;
+    onAdd: (sponsor: NewSponsor) => void;
 };
 
 export default function SponsorForm({ onAdd }: SponsorFormProps) {
@@ -19,11 +19,10 @@ export default function SponsorForm({ onAdd }: SponsorFormProps) {
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
-        const newSponsor: Sponsor = {
-            id: Date.now(),
+        const newSponsor: NewSponsor = {
             name: name,
             email: email,
-            tier: tier as Sponsor["tier"],
+            tier: tier as SponsorTier,
             amount: Number(amount),
             contactPerson: contactPerson,
             notes: notes,
