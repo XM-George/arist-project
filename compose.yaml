@@ -1,0 +1,16 @@
+services:
+  database:
+    image: postgres:17
+    container_name: sponsor-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sponsors_db
+      POSTGRES_USER: sponsors_user
+      POSTGRES_PASSWORD: sponsors_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

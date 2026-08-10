@@ -43,3 +43,10 @@ next-env.d.ts
 # WebStorm / JetBrains
 .idea/
 *.iml
+/src/generated/prisma
+
+
+.agents/
+.claude/
+.windsurf/
+skills-lock.json
